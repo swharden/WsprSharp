@@ -1,10 +1,4 @@
-﻿/* 
- * Code in this file started as VB code code translated to C#
- * using https://converter.telerik.com/ and is being refactored 
- * into idiomatic C# by Scott Harden
- * 
- */
-using System;
+﻿using System;
 using System.Linq;
 
 public class OldEncoder
@@ -23,8 +17,17 @@ public class OldEncoder
     /// Convert station information into a 7-byte array 
     /// using JTEncode's WSPR bit packing algorythm
     /// </summary>
-    public byte[] GetMessageBytes(string callsign, string location, byte power)
+    /// <param name="callsign">callsign of any length (will get padded automatically)</param>
+    /// <param name="location">4-character location (grid square identifier)</param>
+    /// <param name="power">power level in dB (will get rounded automatically)</param>
+    /// <returns></returns>
+    public byte[] GetMessageBytes(string callsign, string location, double power)
     {
+        // sanitize inputs and perform error checking
+        callsign = SanitizeCallsign(callsign);
+        location = SanitizeLocation(location);
+        byte powerByte = SanitizePower(power);
+
         // pack callsign data into a 32-bit integer
         char[] callChars = callsign.ToCharArray();
         uint intA;
@@ -38,9 +41,13 @@ public class OldEncoder
         // pack location and power into a 32-bit integer
         char[] locChars = location.ToCharArray();
         uint intB;
-        intB = (uint)((179 - 10 * (locChars[0] - 'A') - (locChars[2] - '0')) * 180 +
-                             10 * (locChars[1] - 'A') + (locChars[3] - '0'));
-        intB = (intB * 128) + power + 64;
+        intB = (uint)(
+        (
+            179 - 
+            10 * (locChars[0] - 'A') - (locChars[2] - '0')) * 180 +
+            10 * (locChars[1] - 'A') + (locChars[3] - '0')
+        );
+        intB = (intB * 128) + powerByte + 64;
 
         // translate the two integers into a 7-byte array
         byte[] bytes = new byte[7];
@@ -62,14 +69,89 @@ public class OldEncoder
     }
 
     /// <summary>
+    /// Clean-up a callsign in preparation for WSPR encoding.
+    /// Throw an exception if it is not in an expected format.
+    /// </summary>
+    public string SanitizeCallsign(string callsign)
+    {
+        if (callsign is null)
+            throw new ArgumentException("callsign can not be null");
+
+        // All characters must be uppercase
+        callsign = callsign.ToUpper();
+
+        // If only the 2nd character is a digit, then left-pad with a space.
+        bool secondCharacterIsNumeric = char.IsNumber(callsign.ToCharArray()[1]);
+        if (secondCharacterIsNumeric)
+            callsign = " " + callsign;
+
+        // Right-pad with several spaces to ensure callsign has at least 6 characters
+        callsign += "      ";
+
+        // Limit the callsign to exactly 6 characters.
+        callsign = callsign.Substring(0, 6);
+
+        return callsign;
+    }
+
+    /// <summary>
+    /// Clean-up a 4-character location in preparation for WSPR encoding.
+    /// Throw an exception if it is not in an expected format.
+    /// </summary>
+    public string SanitizeLocation(string location)
+    {
+        if (location is null)
+            throw new ArgumentException("location can not be null");
+
+        // All characters must be uppercase
+        location = location.ToUpper();
+
+        // Location must be exactly four characters long
+        if (location.Length != 4)
+            throw new ArgumentException("Location must be exactly four characters long");
+
+        // First two characters must be A thru R
+        foreach (char letter in location.ToCharArray().Take(2))
+            if (letter < 'A' || letter > 'R')
+                throw new ArgumentException("First two location characters must be A-R");
+
+        // Last two characters must be 0-9
+        foreach (char letter in location.ToCharArray().Skip(2).Take(2))
+            if (letter < '0' || letter > '9')
+                throw new ArgumentException("Last two location characters must be 0-9");
+
+        return location;
+    }
+
+    /// <summary>
+    /// Sanitize a power level in preparation for WSPR encoding.
+    /// Only certain power levels are supported by the WSPR protocol.
+    /// </summary>
+    public byte SanitizePower(double power)
+    {
+        if (double.IsNaN(power) || double.IsInfinity(power))
+            throw new ArgumentException("power must me finite");
+
+        byte powerLevel = 0;
+        byte[] validPowerLevels = { 0, 3, 7, 10, 13, 17, 20, 23, 27, 30, 33, 37, 40, 43, 47, 50, 53, 57, 60 };
+        foreach (byte validPowerLevel in validPowerLevels)
+        {
+            if (power >= validPowerLevel)
+                powerLevel = validPowerLevel;
+        }
+
+        return powerLevel;
+    }
+
+    /// <summary>
     /// Convolve a byte array using JTEncode's convolution method
     /// </summary>
-    public byte[] Convolve(byte[] input, int bitSize = WSPR_BIT_COUNT)
+    public byte[] Convolve(byte[] data, int bitCount = WSPR_BIT_COUNT, int messageSize = WSPR_MESSAGE_SIZE)
     {
-        byte[] paddedInput = new byte[WSPR_MESSAGE_SIZE];
-        Array.Copy(input, 0, paddedInput, 0, input.Length);
+        byte[] paddedInput = new byte[messageSize];
+        Array.Copy(data, 0, paddedInput, 0, data.Length);
 
-        byte[] output = new byte[bitSize];
+        byte[] output = new byte[bitCount];
         UInt32 reg0 = 0;
         UInt32 reg1 = 0;
         byte inputBit;
@@ -112,7 +194,7 @@ public class OldEncoder
 
                 output[bitIndex] = parityBit;
                 bitIndex++;
-                if (bitIndex >= bitSize)
+                if (bitIndex >= bitCount)
                     break;
             }
         }
@@ -120,39 +202,35 @@ public class OldEncoder
         return output;
     }
 
-    public byte[] Interleave(byte[] s)
+    /// <summary>
+    /// Interleave a byte array according to JTEncode's WSPR standard
+    /// </summary>
+    public byte[] Interleave(byte[] data)
     {
         byte[] d = new byte[WSPR_BIT_COUNT];
-
-        byte rev, index_temp, i, j, k;
-
-        i = 0;
+        byte rev, j2, j, k;
+        byte i = 0;
 
         for (j = 0; j < 255; j++)
         {
-            // Bit reverse the index
-            index_temp = j;
+            j2 = j;
             rev = 0;
 
             for (k = 0; k < 8; k++)
             {
-                if ((index_temp & 0x01) > 0)
-                {
+                if ((j2 & 0x01) > 0)
                     rev = (byte)(rev | (1 << (7 - k)));
-                }
-                index_temp = (byte)(index_temp >> 1);
+                j2 >>= 1;
             }
 
             if (rev < WSPR_BIT_COUNT)
             {
-                d[rev] = s[i];
+                d[rev] = data[i];
                 i++;
             }
 
             if (i >= WSPR_BIT_COUNT)
-            {
                 break;
-            }
         }
 
         return d;
