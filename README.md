@@ -1,4 +1,7 @@
 # WsprSharp
+
+[![Build Status](https://dev.azure.com/swharden/swharden/_apis/build/status/swharden.WsprSharp?branchName=main)](https://dev.azure.com/swharden/swharden/_build/latest?definitionId=17&branchName=main)
+
 WsprSharp is a .NET Standard library for encoding/decoding messages using the [WSPR protocol](https://en.wikipedia.org/wiki/WSPR_(amateur_radio_software))
 
 <div align="center">
