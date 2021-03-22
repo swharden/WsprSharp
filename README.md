@@ -45,4 +45,4 @@ Download the latest `WsprInspector.exe` from the [Releases page](https://github.
 
 ## Authors
 
-WsprSharp began as a Visual Basic project for .NET Framework written by [Jeff J Weinmann](jwein.acs@gmail.com) (W8ZLW). [Scott W Harden](https://swharden.com/) (AJ4VD) uploaded it to GitHub (with permission) under an MIT license, added tests, and translated it to a C# library targeting .NET Standard.
+WsprSharp began as a Visual Basic project for .NET Framework written by [Jeff J Weinmann](mailto:jwein.acs@gmail.com) (W8ZLW). [Scott W Harden](https://swharden.com/) (AJ4VD) uploaded it to GitHub (with permission) under an MIT license, added tests, and translated it to a C# library targeting .NET Standard.
