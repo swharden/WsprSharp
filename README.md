@@ -10,17 +10,38 @@ WsprSharp is a .NET Standard library for encoding/decoding messages using the [W
 
 ## Quickstart
 
-> **⚠️ WARNING:** This library is not ready for public use
-
 ```cs
-// TODO: code example goes here
+using WsprSharp;
+var wspr = new WsprTransmission("AJ4VD", "EL89", 3);
+
+Console.WriteLine("Message:");
+Console.WriteLine(string.Join(" ", wspr.Message));
+
+Console.WriteLine("Frequencies:");
+Console.WriteLine(string.Join(" ", wspr.Levels));
+```
+
+```
+Message:
+71 59 134 235 146 112 192
+
+Frequencies:
+1 3 2 0 2 2 2 2 3 0 2 0 3 1 3 2 0 0 1 2 2 3 0 1 1 3 3 0 0 0 2 0 2
+0 1 0 0 3 0 3 0 2 0 0 0 2 1 2 1 3 2 2 3 3 2 1 2 0 2 3 1 0 1 2 2 0
+2 1 1 0 1 0 1 0 1 0 1 2 2 1 0 2 1 2 1 3 0 0 0 3 1 2 3 0 1 0 2 2 1
+0 2 0 2 2 1 2 0 3 2 2 3 1 1 2 3 3 2 0 1 3 2 1 0 2 2 3 1 3 0 0 2 0
+2 1 0 3 2 0 1 3 0 2 2 0 2 0 2 3 1 2 3 0 1 3 0 2 2 3 3 0 0 0
 ```
 
 ## WSPR Inspector
 
-<div align="center">
-<img src="dev/graphics/wspr-inspector.png">
-</div>
+WSPR Inspector is a small Windows application designed to visualize how changes to the WSPR inputs affect the message and frequency of the transmission.
+
+![](dev/graphics/wspr-inspector.png)
+
+### Download
+
+Download the latest `WsprInspector.exe` from the [Releases page](https://github.com/swharden/WsprSharp/releases)
 
 ## Authors
 
