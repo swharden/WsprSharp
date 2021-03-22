@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-public class OldEncoder
+public static class Encode
 {
     /// <summary>
     /// Number of bits in a WSPR transmission
@@ -21,7 +21,7 @@ public class OldEncoder
     /// <param name="location">4-character location (grid square identifier)</param>
     /// <param name="power">power level in dB (will get rounded automatically)</param>
     /// <returns></returns>
-    public byte[] GetMessageBytes(string callsign, string location, double power)
+    public static byte[] GetMessageBytes(string callsign, string location, double power)
     {
         // sanitize inputs and perform error checking
         callsign = SanitizeCallsign(callsign);
@@ -72,7 +72,7 @@ public class OldEncoder
     /// Clean-up a callsign in preparation for WSPR encoding.
     /// Throw an exception if it is not in an expected format.
     /// </summary>
-    public string SanitizeCallsign(string callsign)
+    public static string SanitizeCallsign(string callsign)
     {
         if (callsign is null)
             throw new ArgumentException("callsign can not be null");
@@ -98,7 +98,7 @@ public class OldEncoder
     /// Clean-up a 4-character location in preparation for WSPR encoding.
     /// Throw an exception if it is not in an expected format.
     /// </summary>
-    public string SanitizeLocation(string location)
+    public static string SanitizeLocation(string location)
     {
         if (location is null)
             throw new ArgumentException("location can not be null");
@@ -127,7 +127,7 @@ public class OldEncoder
     /// Sanitize a power level in preparation for WSPR encoding.
     /// Only certain power levels are supported by the WSPR protocol.
     /// </summary>
-    public byte SanitizePower(double power)
+    public static byte SanitizePower(double power)
     {
         if (double.IsNaN(power) || double.IsInfinity(power))
             throw new ArgumentException("power must me finite");
@@ -146,7 +146,7 @@ public class OldEncoder
     /// <summary>
     /// Convolve a byte array using JTEncode's convolution method
     /// </summary>
-    public byte[] Convolve(byte[] data, int bitCount = WSPR_BIT_COUNT, int messageSize = WSPR_MESSAGE_SIZE)
+    public static byte[] Convolve(byte[] data, int bitCount = WSPR_BIT_COUNT, int messageSize = WSPR_MESSAGE_SIZE)
     {
         byte[] paddedInput = new byte[messageSize];
         Array.Copy(data, 0, paddedInput, 0, data.Length);
@@ -205,7 +205,7 @@ public class OldEncoder
     /// <summary>
     /// Interleave a byte array according to JTEncode's WSPR standard
     /// </summary>
-    public byte[] Interleave(byte[] data)
+    public static byte[] Interleave(byte[] data)
     {
         byte[] d = new byte[WSPR_BIT_COUNT];
         byte rev, j2, j, k;
@@ -239,7 +239,7 @@ public class OldEncoder
     /// <summary>
     /// Combine data with a standard synchronization array that has good auto-correlation properties.
     /// </summary>
-    public byte[] IntegrateSyncValues(byte[] data)
+    public static byte[] IntegrateSyncValues(byte[] data)
     {
         byte[] sync =
         {
@@ -266,7 +266,7 @@ public class OldEncoder
     /// <summary>
     /// Encode a character as a number according to JTEncode's standard
     /// </summary>
-    public byte WsprCode(char c)
+    public static byte WsprCode(char c)
     {
         if (char.IsDigit(c))
             return (byte)(c - 48);
