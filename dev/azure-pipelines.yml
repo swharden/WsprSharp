@@ -34,9 +34,16 @@ steps:
       command: test
       projects: "tests/*.csproj"
 
-  # Rebuild the solution with .NET Framework
-  - task: VSBuild@1
+  # Rebuild the solution with .NET Core
+  - task: DotNetCoreCLI@2
     displayName: "Build Everything"
     inputs:
-      solution: "src/*.sln"
-      configuration: "release"
+      command: "build"
+      projects: "src/*.sln"
+
+  # Rebuild the solution with .NET Framework
+  #- task: VSBuild@1
+    #displayName: "Build Everything"
+    #inputs:
+      #solution: "src/*.sln"
+      #configuration: "release"
