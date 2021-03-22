@@ -8,6 +8,18 @@ namespace WsprSharp.Tests
     public class EncodeTests
     {
         [Test]
+        public void Test_Quickstart_Demo()
+        {
+            var wspr = new WsprSharp.WsprTransmission("AJ4VD", "EL89", 3);
+
+            Console.WriteLine("Encoded Bytes:");
+            Console.WriteLine(string.Join(" ", wspr.Message));
+
+            Console.WriteLine("Transmission Frequency:");
+            Console.WriteLine(string.Join(" ", wspr.Levels));
+        }
+
+        [Test]
         public void Test_OldEcoder_KnownValues()
         {
             byte[] message = Encode.GetMessageBytes(" W8ZLW", "AA00", 3);

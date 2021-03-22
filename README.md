@@ -5,7 +5,7 @@
 WsprSharp is a .NET Standard library for encoding/decoding messages using the [WSPR protocol](https://en.wikipedia.org/wiki/WSPR_(amateur_radio_software))
 
 <div align="center">
-<img src="dev/graphics/wspr-inspector.png">
+<img src="dev/graphics/wspr-spectrogram.png">
 </div>
 
 ## Quickstart
@@ -15,6 +15,12 @@ WsprSharp is a .NET Standard library for encoding/decoding messages using the [W
 ```cs
 // TODO: code example goes here
 ```
+
+## WSPR Inspector
+
+<div align="center">
+<img src="dev/graphics/wspr-inspector.png">
+</div>
 
 ## Authors
 
