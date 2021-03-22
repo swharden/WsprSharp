@@ -15,6 +15,10 @@ namespace WsprInspector
         public Form1()
         {
             InitializeComponent();
+
+            var ver = typeof(WsprSharp.WsprTransmission).Assembly.GetName().Version;
+            Text = $"WSPR Inspector v{ver.Major}.{ver.Minor}";
+
             Recalculate();
         }
 
