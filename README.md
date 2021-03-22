@@ -2,11 +2,13 @@
 
 [![Build Status](https://dev.azure.com/swharden/swharden/_apis/build/status/swharden.WsprSharp?branchName=main)](https://dev.azure.com/swharden/swharden/_build/latest?definitionId=17&branchName=main)
 
-WsprSharp is a .NET Standard library for encoding/decoding messages using the [WSPR protocol](https://en.wikipedia.org/wiki/WSPR_(amateur_radio_software))
+**WsprSharp is a .NET Standard library for encoding and decoding messages using the [WSPR](https://en.wikipedia.org/wiki/WSPR_(amateur_radio_software)) protocol.** This repository contains extra tools and documentation related to WSPR.
 
 <div align="center">
-<img src="dev/graphics/wspr-spectrogram.png">
+<img src="dev/graphics/wspr-inspector-fskview.png">
 </div>
+
+This image shows a WSPR transmission captured in a [FSKview](https://swharden.com/software/FSKview) spectrogram. By typing the decoded information into the WSPR Inspector we can see what the full WSPR transmission looks like and inspect the contents of the message and transmitted packet.
 
 ## Quickstart
 
