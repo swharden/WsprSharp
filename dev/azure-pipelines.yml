@@ -1,38 +1,42 @@
 trigger:
-- main
+  - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 variables:
-  solution: 'src/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  buildPlatform: "Any CPU"
+  buildConfiguration: "Release"
 
 steps:
+  # Restore packages with .NET Core
+  - task: NuGetToolInstaller@1
+    displayName: "Install NuGet"
+  - task: NuGetCommand@2
+    displayName: "Restore"
+    inputs:
+      restoreSolution: "src/*.sln"
 
-- task: UseDotNet@2
-  displayName: 'Use .NET 5'
-  inputs:
-    packageType: 'sdk'
-    version: '5.x'
-    
-- task: NuGetToolInstaller@1
-  displayName: 'Install NuGet'
-    
-- task: NuGetCommand@2
-  displayName: 'Restore'
-  inputs:
-    restoreSolution: '$(solution)'
-    
-- task: DotNetCoreCLI@2
-  displayName: 'Build'
-  inputs:
-    command: 'build'
-    projects: '$(solution)'
+  # Build and run tests with .NET Core
+  - task: DotNetCoreCLI@2
+    displayName: "Build Project"
+    inputs:
+      command: "build"
+      projects: "src/WsprSharp/*.csproj"
+  - task: DotNetCoreCLI@2
+    displayName: "Build Tests"
+    inputs:
+      command: "build"
+      projects: "tests/*.csproj"
+  - task: DotNetCoreCLI@2
+    displayName: "Run Tests"
+    inputs:
+      command: test
+      projects: "tests/*.csproj"
 
-- task: DotNetCoreCLI@2
-  displayName: 'Run Tests'
-  inputs:
-    command: test
-    projects: '$(solution)'
+  # Rebuild the solution with .NET Framework
+  - task: VSBuild@1
+    displayName: "Build Everything"
+    inputs:
+      solution: "src/*.sln"
+      configuration: "release"
