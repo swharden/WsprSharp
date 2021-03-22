@@ -2,7 +2,7 @@ trigger:
   - main
 
 pool:
-  vmImage: "ubuntu-latest"
+  vmImage: "windows-latest"
 
 variables:
   buildPlatform: "Any CPU"
@@ -40,10 +40,11 @@ steps:
     inputs:
       command: "build"
       projects: "src/*.sln"
+      arguments: "--configuration release"
 
   # Rebuild the solution with .NET Framework
   #- task: VSBuild@1
-    #displayName: "Build Everything"
-    #inputs:
-      #solution: "src/*.sln"
-      #configuration: "release"
+  #displayName: "Build Everything"
+  #inputs:
+  #solution: "src/*.sln"
+  #configuration: "release"
