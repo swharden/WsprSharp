@@ -1,0 +1,22 @@
+﻿#spectrogram {
+    display: grid;
+    grid-template-columns: repeat(162, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+    background-color: #EEEEEE;
+}
+
+    #spectrogram div {
+        height: 20px;
+    }
+
+    #spectrogram .on {
+        background-color: #336299;
+        border-right: 1px solid #EEEEEE;
+    }
+
+    #spectrogram .off {
+        
+    }

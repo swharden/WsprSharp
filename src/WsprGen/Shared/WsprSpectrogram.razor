@@ -1,0 +1,40 @@
+﻿<div id="spectrogram">
+    @foreach (bool square in GetAllSquares())
+    {
+        <div class="@(square ? "on" : "off")">&nbsp</div>
+    }
+</div>
+
+@code {
+
+    private int[] Levels = new int[162];
+    private Random rand = new Random();
+
+    private void RandomizeLevels()
+    {
+        for (int i = 0; i < Levels.Length; i++)
+            Levels[i] = rand.Next(5);
+    }
+
+    private bool[] GetAllSquares()
+    {
+        List<bool> squares = new List<bool>();
+        for (int i = 0; i < 4; i++)
+            squares.AddRange(GetRowSquares(i));
+        return squares.ToArray();
+    }
+
+    private bool[] GetRowSquares(int rowIndex)
+    {
+        bool[] squares = new bool[Levels.Length];
+        for (int i = 0; i < Levels.Length; i++)
+            squares[i] = Levels[i] == rowIndex;
+        return squares;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        RandomizeLevels();
+    }
+}

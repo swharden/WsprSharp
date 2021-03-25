@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>WSPR Code Generator</title>
+    <link href="../../src/WsprGen/wwwroot/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header class="my-4">
+            <h1 class="display-4">WSPR Code Generator</h1>
+        </header>
+
+        <div class="row my-4">
+
+            <div class="col-sm-3">
+                <label>
+                    <div class="fs-5">Callsign</div>
+                    <input type="text" class="form-control" value="AJ4VD">
+                </label>
+            </div>
+
+            <div class="col-sm-3">
+                <label>
+                    <div class="fs-5">Location</div>
+                    <input type="text" class="form-control" value="EL89">
+                </label>
+            </div>
+
+            <div class="col-sm-3">
+                <label>
+                    <div class="fs-5">Power</div>
+                    <select class="form-select">
+                        <option value="1">111</option>
+                        <option value="2">222</option>
+                        <option value="3">333</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="col-sm-3">
+                <label>
+                    <div class="fs-5">Message</div>
+                    <div><code class="fs-6">47 3B 86 EB 92 70 C0</code></div>
+                </label>
+            </div>
+
+        </div>
+
+        <div class="row my-4">
+            <div class="fs-5">Tones</div>
+            <div>
+                <code class="fs-6">
+                    3122000010 
+                    0033322210
+                    0103331022
+                    2000322123
+                    2220003233
+                    2231012023
+                    1012202132
+                    1010121001
+                    0232112003
+                    3212302032
+                    2220122302
+                    3130312013
+                    0100013320
+                    0001010033
+                    2200222112
+                    3011202330
+                    20
+                </code>
+            </div>
+        </div>
+
+
+        <div class="row my-4">
+            <div class="fs-5">Transmission Spectrogram</div>
+            <div class="bg-light">
+                Image goes here
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
