@@ -35,15 +35,19 @@ Frequencies:
 2 1 0 3 2 0 1 3 0 2 2 0 2 0 2 3 1 2 3 0 1 3 0 2 2 3 3 0 0 0
 ```
 
+## WSPR Code Generator
+
+[**WSPR Code Generator**](https://swharden.com/software/wspr-code-generator/) is a web application for generating WSPR transmission levels from user-provided callsign, location, and power information. This tool may be helpful for people interested in pre-programming a microcontroller with the frequency information needed to repeatedly transmit their station information using WSPR.
+
+[![](dev/graphics/wspr-code-generator.jpg)](https://swharden.com/software/wspr-code-generator/)
+
+
 ## WSPR Inspector
 
-WSPR Inspector is a small Windows application designed to visualize how changes to the WSPR inputs affect the message and frequency of the transmission.
+**WSPR Inspector** is a small Windows application designed to visualize how changes to the WSPR inputs affect the message and frequency of the transmission. The latest version can be downloaded from the [Releases](https://github.com/swharden/WsprSharp/releases) page.
 
 ![](dev/graphics/wspr-inspector.png)
 
-### Download
-
-Download the latest `WsprInspector.exe` from the [Releases page](https://github.com/swharden/WsprSharp/releases)
 
 ## Authors
 
