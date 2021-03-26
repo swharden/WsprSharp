@@ -8,8 +8,8 @@
     grid-template-rows: repeat(4, 1fr);
     width: 100%;
     padding: 10px;
-    margin: 10px;
     background-color: #EEEEEE;
+    font-size: 1px;
 }
 
     #spectrogram div {
