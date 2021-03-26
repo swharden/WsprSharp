@@ -1,4 +1,8 @@
-﻿#spectrogram {
+﻿code {
+    color: #337cd6;
+}
+
+#spectrogram {
     display: grid;
     grid-template-columns: repeat(162, 1fr);
     grid-template-rows: repeat(4, 1fr);
@@ -13,7 +17,7 @@
     }
 
     #spectrogram .on {
-        background-color: #336299;
+        background-color: #337cd6;
         border-right: 1px solid #EEEEEE;
     }
 

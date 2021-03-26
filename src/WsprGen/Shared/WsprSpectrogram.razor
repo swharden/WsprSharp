@@ -10,10 +10,15 @@
     private int[] Levels = new int[162];
     private Random rand = new Random();
 
-    private void RandomizeLevels()
+    public void SetLevels(byte[] levels)
     {
-        for (int i = 0; i < Levels.Length; i++)
-            Levels[i] = rand.Next(5);
+        if (levels.Length != Levels.Length)
+            throw new ArgumentException("162 levels required");
+
+        for (int i = 0; i < levels.Length; i++)
+            Levels[i] = levels[i];
+
+        StateHasChanged();
     }
 
     private bool[] GetAllSquares()
@@ -30,11 +35,5 @@
         for (int i = 0; i < Levels.Length; i++)
             squares[i] = Levels[i] == rowIndex;
         return squares;
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        RandomizeLevels();
     }
 }

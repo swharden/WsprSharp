@@ -9,19 +9,22 @@
     <div class="col-sm-3">
         <div class="fs-5">Callsign</div>
         <input type="text" class="form-control" @bind-value="Callsign" @bind-value:event="oninput">
+        <div class="text-muted">@CallsignErrorMessage</div>
     </div>
 
     <div class="col-sm-3">
         <div class="fs-5">Location</div>
         <input type="text" class="form-control" @bind-value="Location" @bind-value:event="oninput">
+        <div class="text-muted">@LocationErrorMessage</div>
     </div>
 
     <div class="col-sm-3">
         <div class="fs-5">Power</div>
         <select class="form-select" @bind-value="Power" @bind-value:event="oninput">
-            <option value="1">111</option>
-            <option value="2">222</option>
-            <option value="3">333</option>
+            @foreach (var level in WsprSharp.Encode.GetValidPowerLevels())
+            {
+                <option value="@level">@level</option>
+            }
         </select>
     </div>
 
@@ -33,30 +36,101 @@
 </div>
 
 <div class="row my-4">
+    <div class="fs-5">Transmission Spectrogram</div>
+    <WsprSpectrogram @ref="Spectro" />
+</div>
+
+<div class="row my-4">
     <div class="fs-5">Tones</div>
     <div>
         <code class="fs-6">
-            @LevelsText;
+            @LevelsText
         </code>
     </div>
 </div>
 
-
-<div class="row my-4">
-    <div class="fs-5">Transmission Spectrogram</div>
-    <WsprSpectrogram />
-</div>
-
 @code{
 
-    // TODO: recalculate when any of these are changed
-    private string Callsign;
-    private string Location;
-    private string Power;
+    private WsprSpectrogram Spectro;
 
-    // TODO: simplify how these data are accessed
-    private WsprSharp.WsprTransmission WSPR = new WsprSharp.WsprTransmission("AJ4VD", "EL89", 5);
-    private string MessageText => WSPR.GetMessageString();
-    private string LevelsText => WSPR.GetLevelsString();
+    private string callsign = "AJ4VD";
+    private string Callsign { get => callsign; set { callsign = value; Recalculate(); } }
+    private string CallsignErrorMessage
+    {
+        get
+        {
+            if (callsign.Length > 6)
+                return "maximum 6 characters";
 
+            foreach (char c in callsign.ToUpper().ToCharArray())
+            {
+                bool isLetter = c >= 'A' && c <= 'Z';
+                bool isNumber = c >= '0' && c <= '9';
+                if (isLetter == false && isNumber == false)
+                    return "letters and numbers only";
+            }
+
+            return null;
+        }
+    }
+
+    private string location = "EL89";
+    private string Location { get => location; set { location = value; Recalculate(); } }
+
+    private string power = "3";
+    private string Power { get => power; set { power = value; Recalculate(); } }
+
+    private string LocationErrorMessage
+    {
+        get
+        {
+            if (location is null || location.Length != 4)
+                return "4 characters required";
+
+            var firstTwo = location.ToUpper().ToCharArray().Take(2);
+            foreach (char letter in firstTwo)
+                if (letter < 'A' || letter > 'R')
+                    return "first two characters must be letters";
+
+            var lastTwo = location.ToUpper().ToCharArray().Skip(2).Take(2);
+            foreach (char letter in lastTwo)
+                if (letter < '0' || letter > '9')
+                    return "last two characters must be numbers";
+
+            return null;
+        }
+    }
+
+    private string MessageText = "not yet run";
+    private string LevelsText = "not yet run";
+
+    private void Error()
+    {
+        MessageText = "ERROR";
+        LevelsText = "ERROR";
+    }
+
+    private void Recalculate()
+    {
+        if (LocationErrorMessage != null || CallsignErrorMessage != null)
+        {
+            Error();
+            return;
+        }
+
+        var WSPR = new WsprSharp.WsprTransmission(Callsign, Location, int.Parse(Power));
+        MessageText = WSPR.GetMessageString();
+        LevelsText = string.Join(", ", WSPR.Levels.Select(x => x.ToString()));
+        Spectro.SetLevels(WSPR.Levels);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            Recalculate();
+            StateHasChanged();
+        }
+    }
 }
