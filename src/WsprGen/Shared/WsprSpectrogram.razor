@@ -33,7 +33,7 @@
     {
         bool[] squares = new bool[Levels.Length];
         for (int i = 0; i < Levels.Length; i++)
-            squares[i] = Levels[i] == rowIndex;
+            squares[i] = Levels[i] == (3 - rowIndex);
         return squares;
     }
 }
