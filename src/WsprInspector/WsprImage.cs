@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace WsprSharp
+namespace WsprInspector
 {
     public static class WsprImage
     {

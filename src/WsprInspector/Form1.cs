@@ -35,7 +35,7 @@ namespace WsprInspector
 
             tbMessage.Text = wspr.GetMessageString();
             rtbLevels.Text = wspr.GetLevelsString();
-            pictureBox1.Image = WsprSharp.WsprImage.MakeSpectrogram(wspr.Levels);
+            pictureBox1.Image = WsprImage.MakeSpectrogram(wspr.Levels);
         }
 
         private void tbCallsign_TextChanged(object sender, EventArgs e) => Recalculate();
