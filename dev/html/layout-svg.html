@@ -9,13 +9,17 @@
 <body>
     <svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg" style="background-color:#EEEEEE">
         <style>
-            rect {
+            .off {
+                fill:#CCCCCC;
                 stroke: black;
-                stroke-width: 1px;
+            }
+            .on {
+                fill:#00FF00;
+                stroke: black;
             }
         </style>
-        <rect x="50" y="20" width="10" height="10" style="fill:#CCCCCC;" />
-        <rect x="60" y="20" width="10" height="10" style="fill:#00FF00;" />
+        <rect x="50" y="20" width="10" height="10" class="on" />
+        <rect x="60" y="20" width="10" height="10" class="off" />
     </svg>
 </body>
 

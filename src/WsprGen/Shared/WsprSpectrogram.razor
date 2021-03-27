@@ -1,14 +1,29 @@
-﻿<div id="spectrogram">
-    @foreach (bool square in GetAllSquares())
-    {
-        <div class="@(square ? "on" : "off")">&nbsp</div>
-    }
+﻿<div class="my-3">
+    <svg viewBox="0 0 @(162 * SquareWidth) @(4 * SquareHeight)" xmlns="http://www.w3.org/2000/svg">
+        <style>
+            rect {
+                fill: #337cd6;
+            }
+        </style>
+
+        @for (int y = 0; y < 4; y++)
+        {
+            @for (int x = 0; x < 162; x++)
+            {
+                @if (Levels[x] == y)
+                {
+                    <rect x="@(x * 10)" y="@((3 - y) * SquareHeight)" width="@(SquareWidth - 1)" height="@(SquareHeight - 1)" />
+                }
+            }
+        }
+    </svg>
 </div>
 
 @code {
+    private const int SquareWidth = 10;
+    private const int SquareHeight = 20;
 
     private int[] Levels = new int[162];
-    private Random rand = new Random();
 
     public void SetLevels(byte[] levels)
     {
@@ -19,21 +34,5 @@
             Levels[i] = levels[i];
 
         StateHasChanged();
-    }
-
-    private bool[] GetAllSquares()
-    {
-        List<bool> squares = new List<bool>();
-        for (int i = 0; i < 4; i++)
-            squares.AddRange(GetRowSquares(i));
-        return squares.ToArray();
-    }
-
-    private bool[] GetRowSquares(int rowIndex)
-    {
-        bool[] squares = new bool[Levels.Length];
-        for (int i = 0; i < Levels.Length; i++)
-            squares[i] = Levels[i] == (3 - rowIndex);
-        return squares;
     }
 }
