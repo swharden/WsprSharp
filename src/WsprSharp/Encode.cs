@@ -44,10 +44,9 @@ namespace WsprSharp
             char[] locChars = location.ToCharArray();
             uint intB;
             intB = (uint)(
-            (
-                179 -
-                10 * (locChars[0] - 'A') - (locChars[2] - '0')) * 180 +
-                10 * (locChars[1] - 'A') + (locChars[3] - '0')
+                180 * (179 - 10 * (locChars[0] - 'A') - (locChars[2] - '0')) +
+                10 * (locChars[1] - 'A') +
+                1 * (locChars[3] - '0')
             );
             intB = (intB * 128) + powerByte + 64;
 
