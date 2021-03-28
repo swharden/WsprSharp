@@ -23,7 +23,7 @@
         <select class="form-select" @bind-value="Power" @bind-value:event="oninput">
             @foreach (var level in WsprSharp.Encode.GetValidPowerLevels())
             {
-                <option value="@level">@level</option>
+                <option value="@level">@WsprSharp.Encode.GetPowerDescription(level)</option>
             }
         </select>
     </div>
@@ -77,7 +77,7 @@
     private string location = "EL89";
     private string Location { get => location; set { location = value; Recalculate(); } }
 
-    private string power = "3";
+    private string power = "30";
     private string Power { get => power; set { power = value; Recalculate(); } }
 
     private string LocationErrorMessage

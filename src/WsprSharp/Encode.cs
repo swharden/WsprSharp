@@ -122,6 +122,14 @@ namespace WsprSharp
         public static byte[] GetValidPowerLevels() =>
             new byte[] { 0, 3, 7, 10, 13, 17, 20, 23, 27, 30, 33, 37, 40, 43, 47, 50, 53, 57, 60 };
 
+        public static string GetPowerDescription(byte level)
+        {
+            double e = level / 10.0;
+            double powerMilliwatts = Math.Pow(10, e);
+            double powerWatts = powerMilliwatts / 1000.0;
+            return $"{level}: 10^{e} mW ≈ {Math.Round(powerWatts, 3)} W";
+        }
+
         /// <summary>
         /// Sanitize a power level in preparation for WSPR encoding.
         /// Only certain power levels are supported by the WSPR protocol.
