@@ -16,8 +16,7 @@ namespace WsprInspector
         {
             InitializeComponent();
 
-            var ver = typeof(WsprSharp.WsprTransmission).Assembly.GetName().Version;
-            Text = $"WSPR Inspector v{ver.Major}.{ver.Minor}";
+            Text = $"WSPR Inspector v{WsprSharp.Version.VersionString}";
 
             Recalculate();
         }
