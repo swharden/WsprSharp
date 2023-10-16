@@ -78,14 +78,24 @@ namespace WsprSharp
             if (callsign is null)
                 throw new ArgumentException("callsign can not be null");
 
+            // trim preceeding and trailing whitespace
             callsign = callsign.Trim().ToUpper();
 
-            // ensure it is long enough
-            while (callsign.Length < 6)
+            // If the 2nd character is a digit pad with a space
+            if (char.IsNumber(callsign[1]))
                 callsign = " " + callsign;
 
-            // ensure it is not too long
-            callsign = callsign.Substring(0, 6);
+            // The third character must now be a number
+            if (!char.IsNumber(callsign[2]))
+                throw new ArgumentException("the callsign's second or third character must be a number");
+
+            // Trim long callsigns to 6 characters
+            if (callsign.Length > 6)
+                callsign = callsign.Substring(0, 6);
+
+            // Right-pad short callsigns with whitespace
+            while (callsign.Length < 6)
+                callsign += " ";
 
             return callsign;
         }
