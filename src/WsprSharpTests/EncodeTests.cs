@@ -7,10 +7,15 @@ public class EncodeTests
     [Test]
     public void Test_OldEcoder_KnownValues()
     {
+        // https://github.com/swharden/WsprSharp/tree/main/dev/WsprNetVB
         byte[] message = Encode.GetMessageBytes(" W8ZLW", "AA00", 3);
         byte[] convolved = Encode.Convolve(message);
         byte[] interleaved = Encode.Interleave(convolved);
         byte[] levels = Encode.IntegrateSyncValues(interleaved);
+
+        byte[] expectedMessage = { 0xF9, 0x72, 0xF2, 0x8F, 0xBB, 0x90, 0xC0 };
+
+        Assert.AreEqual(expectedMessage, message);
 
         byte[] expectedLevels = new byte[]
         {
