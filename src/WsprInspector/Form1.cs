@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WsprInspector
@@ -28,12 +21,12 @@ namespace WsprInspector
             if (wspr.IsValid == false)
             {
                 tbMessage.Text = "invalid input";
-                rtbLevels.Text = "invalid input";
+                rtbLevels.Text = wspr.ErrorMessage;
                 return;
             }
 
             tbMessage.Text = wspr.MessageString;
-            rtbLevels.Text = wspr.LevelsString;
+            rtbLevels.Text = wspr.LevelsString.Replace(" ", "");
             pictureBox1.Image = WsprImage.MakeSpectrogram(wspr.Levels);
         }
 
