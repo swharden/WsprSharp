@@ -10,8 +10,13 @@ namespace WsprSharp
         public readonly string Location;
         public readonly int Power;
         public readonly byte[] Message;
+        public readonly string MessageString;
+
         public readonly byte[] Levels;
-        public readonly bool IsValid;
+        public readonly string LevelsString = string.Empty;
+        public bool IsValid => string.IsNullOrEmpty(ErrorMessage);
+        public readonly string ErrorMessage;
+        public readonly string ErrorMessageDetails = string.Empty;
 
         /// <summary>
         /// Create a new single-packet WSPR transmission
@@ -26,24 +31,24 @@ namespace WsprSharp
                 Callsign = Encode.SanitizeCallsign(callsign);
                 Location = Encode.SanitizeLocation(location);
                 Power = Encode.SanitizePower(power);
-                IsValid = true;
+                ErrorMessage = string.Empty;
             }
-            catch
+            catch (Exception ex)
             {
-                IsValid = false;
+                ErrorMessage = ex.Message;
+                ErrorMessageDetails = ex.ToString();
+                Message = Array.Empty<byte>();
+                Levels = Array.Empty<byte>();
+                return;
             }
 
-            if (IsValid)
-            {
-                Message = Encode.GetMessageBytes(callsign, location, power);
-                byte[] convolved = Encode.Convolve(Message);
-                byte[] interleaved = Encode.Interleave(convolved);
-                Levels = Encode.IntegrateSyncValues(interleaved);
-            }
+            Message = Encode.GetMessageBytes(callsign, location, power);
+            MessageString = string.Join(" ", Message.Select(x => x.ToString("X2")));
+            byte[] convolved = Encode.Convolve(Message);
+            byte[] interleaved = Encode.Interleave(convolved);
+            Levels = Encode.IntegrateSyncValues(interleaved);
+            LevelsString = GetLevelsString(", ");
         }
-
-        public string GetMessageString(string separator = " ") =>
-            string.Join(separator, Message.Select(x => x.ToString("X2")));
 
         public string GetLevelsString(string separator = ",", int valuesPerLine = 30)
         {

@@ -76,10 +76,26 @@ namespace WsprSharp
         public static string SanitizeCallsign(string callsign)
         {
             if (callsign is null)
-                throw new ArgumentException("callsign can not be null");
+                throw new ArgumentException("callsign must contain at least one number");
 
-            // trim preceeding and trailing whitespace
             callsign = callsign.Trim().ToUpper();
+
+            // Trim long callsigns to 6 characters
+            if (callsign.Length > 6)
+                callsign = callsign.Substring(0, 6);
+
+            int numbers = callsign.Where(x => char.IsDigit(x)).Count();
+            if (numbers < 1)
+                throw new ArgumentException("callsign must contain at least one number");
+
+            if (numbers > 1)
+                throw new ArgumentException("callsign may not contain multiple numbers");
+
+            if (!char.IsLetter(callsign.First()))
+                throw new ArgumentException("callsign must start with a letter");
+
+            if (!char.IsLetter(callsign.Last()))
+                throw new ArgumentException("callsign must end with a letter");
 
             // If the 2nd character is a digit pad with a space
             if (char.IsNumber(callsign[1]))
@@ -88,10 +104,6 @@ namespace WsprSharp
             // The third character must now be a number
             if (!char.IsNumber(callsign[2]))
                 throw new ArgumentException("the callsign's second or third character must be a number");
-
-            // Trim long callsigns to 6 characters
-            if (callsign.Length > 6)
-                callsign = callsign.Substring(0, 6);
 
             // Right-pad short callsigns with whitespace
             while (callsign.Length < 6)
@@ -107,37 +119,41 @@ namespace WsprSharp
         public static string SanitizeLocation(string location)
         {
             if (location is null)
-                throw new ArgumentException("location can not be null");
+                throw new ArgumentException("location contain exactly four characters");
 
             // All characters must be uppercase
             location = location.ToUpper();
 
             // Location must be exactly four characters long
             if (location.Length != 4)
-                throw new ArgumentException("Location must be exactly four characters long");
+                throw new ArgumentException("location contain exactly four characters");
 
             // First two characters must be A thru R
             foreach (char letter in location.ToCharArray().Take(2))
                 if (letter < 'A' || letter > 'R')
-                    throw new ArgumentException("First two location characters must be A-R");
+                    throw new ArgumentException("location must start with two letters A-R");
 
             // Last two characters must be 0-9
             foreach (char letter in location.ToCharArray().Skip(2).Take(2))
                 if (letter < '0' || letter > '9')
-                    throw new ArgumentException("Last two location characters must be 0-9");
+                    throw new ArgumentException("location must end with two digits 0-9");
 
             return location;
         }
 
-        public static byte[] GetValidPowerLevels() =>
-            new byte[] { 0, 3, 7, 10, 13, 17, 20, 23, 27, 30, 33, 37, 40, 43, 47, 50, 53, 57, 60 };
-
-        public static string GetPowerDescription(byte level)
+        public static byte[] GetValidPowerLevels()
         {
-            double e = level / 10.0;
-            double powerMilliwatts = Math.Pow(10, e);
-            double powerWatts = powerMilliwatts / 1000.0;
-            return $"{level}: 10^{e} mW ≈ {Math.Round(powerWatts, 3)} W";
+            return new byte[] { 0, 3, 7, 10, 13, 17, 20, 23, 27, 30, 33, 37, 40, 43, 47, 50, 53, 57, 60 };
+        }
+
+        public static string GetPowerDescription(byte dB)
+        {
+            double mW = Math.Pow(10, dB / 10.0);
+            string power = (mW < 1000)
+                ? $"{dB} dB ({mW:#} mW)"
+                : $"{dB} dB ({mW / 1000:#} W)";
+            power = power.Replace("01 ", "00 ");
+            return power;
         }
 
         /// <summary>
