@@ -1,0 +1,26 @@
+name: PR
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+env:
+  DOTNET_VERSION: "7.0.x"
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v3
+      - name: ✨ Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: 🚚 Restore
+        run: dotnet restore src
+      - name: 🛠️ Build
+        run: dotnet build src --configuration Release
+      - name: 🧪 Test
+        run: dotnet test src --configuration Release --verbosity minimal

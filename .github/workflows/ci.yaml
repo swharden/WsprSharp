@@ -2,19 +2,25 @@ name: CI
 
 on:
   workflow_dispatch:
-  pull_request:
   push:
     branches:
       - main
-    paths:
-      - src/**
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 env:
   DOTNET_VERSION: "7.0.x"
 
 jobs:
   test:
-    name: Test and Deploy
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: 🛒 Checkout
