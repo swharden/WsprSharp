@@ -14,7 +14,7 @@ env:
 
 jobs:
   test:
-    name: Test on Linux
+    name: Test and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: 🛒 Checkout
@@ -29,3 +29,14 @@ jobs:
         run: dotnet build src --configuration Release
       - name: 🧪 Test
         run: dotnet test src --configuration Release --verbosity minimal
+      - name: 🌠 Build Website
+        run: dotnet publish ./src/WsprCodeGenerator --configuration Release -o ./public
+      - name: 🛠️ Configure Pages
+        uses: actions/configure-pages@v2
+      - name: 📦 Upload Artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "./public/wwwroot"
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
