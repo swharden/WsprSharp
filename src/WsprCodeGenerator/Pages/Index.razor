@@ -1,0 +1,98 @@
+﻿@page "/"
+
+<header class="my-4">
+    <h1 class="display-4">WSPR Code Generator</h1>
+</header>
+
+<div class="row my-4">
+
+    <div class="col-sm-3">
+        <div class="fs-5">Callsign</div>
+        <input type="text" class="form-control" @bind-value="Callsign" @bind-value:event="oninput">
+    </div>
+
+    <div class="col-sm-3">
+        <div class="fs-5">Location</div>
+        <input type="text" class="form-control" @bind-value="Location" @bind-value:event="oninput">
+    </div>
+
+    <div class="col-sm-3">
+        <div class="fs-5">Power</div>
+        <select class="form-select" @bind-value="Power" @bind-value:event="oninput">
+            @foreach (var level in WsprSharp.Encode.GetValidPowerLevels())
+            {
+                <option value="@level">@WsprSharp.Encode.GetPowerDescription(level)</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="fs-5">Message</div>
+        <div><code class="fs-6">@WSPR.MessageString</code></div>
+    </div>
+
+</div>
+
+@if (WSPR is not null && !WSPR.IsValid)
+{
+    <div>
+        <div class="alert alert-danger d-inline-block" role="alert">
+            <strong>ERROR:</strong>
+            @WSPR?.ErrorMessage
+        </div>
+        <details class="m-3 font-monospace">
+            <summary style="opacity: .5;">code details</summary>
+            <pre class="p-2 bg-light border">@WSPR?.ErrorMessageDetails</pre>
+        </details>
+    </div>
+}
+
+<div class="row my-4">
+    <div class="fs-5">Transmission Spectrogram</div>
+    <WsprSpectrogram @ref="Spectro" />
+</div>
+
+<div class="row my-4">
+    <div class="fs-5">Tones</div>
+    <div>
+        <code class="fs-6">
+            @WSPR?.LevelsString
+        </code>
+    </div>
+</div>
+
+<footer class="fw-muted mt-5">
+    <a href="https://github.com/swharden/WsprSharp">WsprSharp</a>
+    version @WsprSharp.Version.VersionString
+    running on .NET @Environment.Version
+</footer>
+
+@code {
+    private WsprSharp.WsprTransmission WSPR = new("AJ4VD", "EL89", 30);
+    private WsprSpectrogram? Spectro = null;
+
+    private string callsign = "AJ4VD";
+    private string Callsign { get => callsign; set { callsign = value; Recalculate(); } }
+
+    private string location = "EL89";
+    private string Location { get => location; set { location = value; Recalculate(); } }
+
+    private string power = "30";
+    private string Power { get => power; set { power = value; Recalculate(); } }
+
+    private void Recalculate()
+    {
+        WSPR = new WsprSharp.WsprTransmission(Callsign, Location, int.Parse(Power));
+        Spectro?.SetLevels(WSPR.Levels);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            Recalculate();
+            StateHasChanged();
+        }
+    }
+}

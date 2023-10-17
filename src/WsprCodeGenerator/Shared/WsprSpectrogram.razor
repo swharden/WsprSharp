@@ -1,0 +1,38 @@
+﻿<div class="my-3">
+    <svg viewBox="0 0 @(162 * SquareWidth) @(4 * SquareHeight)" xmlns="http://www.w3.org/2000/svg">
+        @for (int y = 0; y < 4; y++)
+        {
+            @for (int x = 0; x < 162; x++)
+            {
+                @if (Levels[x] == y && IsValid)
+                {
+                    <rect x="@(x * 10)" y="@((3 - y) * SquareHeight)" width="@(SquareWidth - 1)" height="@(SquareHeight - 1)" />
+                }
+            }
+        }
+    </svg>
+</div>
+
+@code {
+    private const int SquareWidth = 10;
+    private const int SquareHeight = 20;
+
+    private int[] Levels = new int[162];
+    public bool IsValid = false;
+
+    public void SetLevels(byte[] levels)
+    {
+        if (levels.Length != Levels.Length)
+        {
+            Levels[0] = -1;
+            IsValid = false;
+        }
+        else
+        {
+            Array.Copy(levels, 0, Levels, 0, Levels.Length);
+            IsValid = true;
+        }
+
+        StateHasChanged();
+    }
+}

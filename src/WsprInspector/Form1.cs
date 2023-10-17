@@ -32,8 +32,8 @@ namespace WsprInspector
                 return;
             }
 
-            tbMessage.Text = wspr.GetMessageString();
-            rtbLevels.Text = wspr.GetLevelsString();
+            tbMessage.Text = wspr.MessageString;
+            rtbLevels.Text = wspr.LevelsString;
             pictureBox1.Image = WsprImage.MakeSpectrogram(wspr.Levels);
         }
 
