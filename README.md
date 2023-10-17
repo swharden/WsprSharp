@@ -14,7 +14,7 @@ This image shows a WSPR transmission captured in a [FSKview](https://swharden.co
 
 [**WSPR Code Generator**](https://swharden.com/software/wspr-code-generator/) is a web application for generating WSPR transmission levels from user-provided callsign, location, and power information. This tool may be helpful for people interested in pre-programming a microcontroller with the frequency information needed to repeatedly transmit their station information using WSPR.
 
-**Try it in your browser!** https://swharden.com/software/wspr-code-generator/
+* **Try it in your browser!** https://swharden.com/software/wspr-code-generator/
 
 <div align="center">
 <a href="https://swharden.com/software/wspr-code-generator/">
@@ -24,7 +24,9 @@ This image shows a WSPR transmission captured in a [FSKview](https://swharden.co
 
 ## WSPR Inspector
 
-**WSPR Inspector** is a small Windows application designed to visualize how changes to the WSPR inputs affect the message and frequency of the transmission. The latest version can be downloaded from the [Releases](https://github.com/swharden/WsprSharp/releases) page.
+**WSPR Inspector** is a small Windows application designed to visualize how changes to the WSPR inputs affect the message and frequency of the transmission.
+
+* **Download:** WsprInspector.zip from the [Releases page](https://github.com/swharden/WsprSharp/releases)
 
 <div align="center">
 <img src="dev/graphics/wspr-inspector.png" width="75%">
